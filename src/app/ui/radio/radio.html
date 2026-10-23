@@ -1,0 +1,42 @@
+<section class="radio" [class.min]="mini()" aria-label="Радио Ноктюрн FM 13.02">
+  <header class="r-bar">
+    <span class="r-name"><i class="r-led" [class.on]="playing()"></i>НОКТЮРН FM</span>
+    <span class="r-freq mono">13.02 <small>MHz</small></span>
+    <button class="r-ico" (click)="mini.set(!mini())" [attr.aria-label]="mini() ? 'Развернуть плеер' : 'Свернуть плеер'">{{ mini() ? '▢' : '–' }}</button>
+  </header>
+
+  <div class="r-main">
+    <div class="r-lcd mono">
+      <span class="r-time">{{ fmt(cur()) }}</span>
+      <span class="r-sub">{{ playing() ? 'В ЭФИРЕ' : (hasTracks() ? 'ПАУЗА' : 'НЕТ СИГНАЛА') }}</span>
+      <span class="r-sub dim">{{ hasTracks() ? (state().index + 1) + ' / ' + state().tracks.length : '-' }}</span>
+    </div>
+    <canvas #viz class="r-viz" width="300" height="88" (click)="scope.set(!scope())"
+            [attr.title]="scope() ? 'Осциллограф · нажми для спектра' : 'Спектр · нажми для осциллографа'"></canvas>
+  </div>
+
+  <div class="r-marquee mono" aria-live="polite"><span [style.animation-duration]="marqueeSec() + 's'">{{ label() }}&nbsp;&nbsp;★&nbsp;&nbsp;{{ label() }}&nbsp;&nbsp;★&nbsp;&nbsp;</span></div>
+
+  <input class="r-seek" type="range" min="0" [max]="dur() || 1" step="0.1" [value]="cur()" aria-label="Перемотка"
+         [disabled]="!dur()" (input)="city.seek(+$any($event.target).value)">
+
+  <div class="r-ctl">
+    <button class="r-btn" (click)="city.click(); city.radioPrev()" aria-label="Предыдущий трек" [disabled]="!hasTracks()">⏮</button>
+    <button class="r-btn play" (click)="city.click(); city.radioToggle()" [attr.aria-label]="playing() ? 'Пауза' : 'Играть'" [disabled]="!hasTracks()">{{ playing() ? '❚❚' : '▶' }}</button>
+    <button class="r-btn" (click)="city.click(); city.radioNext()" aria-label="Следующий трек" [disabled]="!hasTracks()">⏭</button>
+    <label class="r-vol"><span aria-hidden="true">{{ city.volume() === 0 ? '🔇' : '🔊' }}</span>
+      <input type="range" min="0" max="1" step="0.01" [value]="city.volume()" aria-label="Громкость" (input)="city.setVolume(+$any($event.target).value)">
+    </label>
+    <button class="r-btn list" [class.on]="showList()" (click)="showList.set(!showList())" aria-label="Список треков" [disabled]="!hasTracks()">≡</button>
+  </div>
+
+  @if (showList() && hasTracks()) {
+    <ol class="r-list mono">
+      @for (t of state().tracks; track t.file; let i = $index) {
+        <li><button [class.on]="i === state().index" (click)="city.radioPlay(i)">
+          <span class="n">{{ (i + 1).toString().padStart(2, '0') }}</span>{{ t.artist ? t.artist + ' - ' : '' }}{{ t.title }}</button></li>
+      }
+    </ol>
+  }
+  @if (!hasTracks()) { <p class="r-empty">Эфир пуст: положи файлы .opus в <code>public/music</code>.</p> }
+</section>

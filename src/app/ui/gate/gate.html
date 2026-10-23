@@ -1,0 +1,8 @@
+<div class="gate" [class.out]="city.started()" [attr.aria-hidden]="city.started()">
+  <div class="gate-in">
+    <h2>CYBER<span>IUS</span></h2>
+    <p>Интерактивный город. Выбирай локацию, и камера перелетит к ней. Звук включится после входа.</p>
+    <button class="enter" [disabled]="!city.ready()" (click)="city.enter()">{{ label() }}</button>
+    <div class="keys">клавиши 1–5 · в эфире Ноктюрн FM 13.02</div>
+  </div>
+</div>

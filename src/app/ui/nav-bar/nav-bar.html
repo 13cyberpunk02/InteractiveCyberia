@@ -1,0 +1,8 @@
+<nav class="hud nav" aria-label="Локации">
+  @for (l of locs; track l.key) {
+    <a [routerLink]="'/' + l.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+       ariaCurrentWhenActive="page" (click)="city.click()">
+      <span class="k mono">[{{ l.hotkey }}] {{ l.code }}</span><span class="n">{{ l.name }}</span>
+    </a>
+  }
+</nav>

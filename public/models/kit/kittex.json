@@ -1,0 +1,23 @@
+{
+ "dark": {
+  "a": "dark_a.jpg",
+  "e": "dark_e.jpg",
+  "n": "dark_n.jpg"
+ },
+ "mid": {
+  "a": "mid_a.jpg",
+  "e": "mid_e.jpg",
+  "n": "mid_n.jpg"
+ },
+ "grey": {
+  "a": "grey_a.jpg",
+  "e": "grey_e.jpg",
+  "n": "grey_n.jpg"
+ },
+ "hex": {
+  "a": "hex_a.jpg",
+  "e": "hex_e.jpg",
+  "n": "hex_n.jpg"
+ },
+ "atlas": "atlas.jpg"
+}

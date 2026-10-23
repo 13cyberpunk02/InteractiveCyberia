@@ -1,0 +1,20 @@
+<div class="eyebrow mono">Сектор S-50 · ангар</div>
+<h1>Выбери <i>машину</i></h1>
+<div class="pick">
+  @for (g of groups; track g.label) {
+    <div class="pick-h mono">{{ g.label }}</div>
+    @for (c of g.cars; track c.key) {
+      <button class="car" [class.on]="city.car() === c.key" [attr.aria-pressed]="city.car() === c.key" (click)="choose(c.key)">
+        <span class="cn">{{ c.name }}</span><span class="cd">{{ c.desc }}</span>
+        <span class="bars mono">
+              <span>Скорость <i [style.--v]="c.speedBar"></i></span>
+              <span>Манёвр <i [style.--v]="c.turnBar"></i></span>
+            </span>
+      </button>
+    }
+  }
+</div>
+<button class="cta" [disabled]="city.starting()" (click)="city.click(); city.takeoff()">
+  {{ city.starting() ? 'Загрузка…' : ground() ? 'Поехать →' : 'Взлететь →' }}
+</button>
+<p class="dim">{{ hint() }}</p>

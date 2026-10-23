@@ -1,0 +1,22 @@
+@if (city.driving()) {
+  <div class="hud drive">
+    <span class="chip car-name">{{ city.carSpec().name }}</span>
+    <span class="gauge"><b>{{ city.hud().speed | number:'1.0-0' }}</b><small>км/ч</small></span>
+    @if (!ground()) { <span class="gauge"><b>{{ city.hud().altitude | number:'1.0-0' }}</b><small>м</small></span> }
+    <button class="chip" (click)="city.click(); city.land()">Выйти · Esc</button>
+    <div class="dhint mono">{{ ground() ? 'W/S газ · A/D поворот · Shift ускорение · T след' : 'W/S газ · A/D поворот · E вверх · Q вниз · Shift ускорение · T след' }}</div>
+  </div>
+  @if (coarse) {
+    <div class="touch">
+      <div class="stick" (pointerdown)="stickDown($event)" (pointermove)="stickMove($event)" (pointerup)="stickUp()" (pointercancel)="stickUp()">
+        <div class="knob" [style.transform]="knob()"></div>
+      </div>
+      <div class="tbtns">
+        @for (b of pedals(); track b.k) {
+          <button [class.gas]="b.k === 'fwd'" (pointerdown)="press(b.k, true, $event)" (pointerup)="press(b.k, false)"
+                  (pointercancel)="press(b.k, false)" (lostpointercapture)="press(b.k, false)">{{ b.label }}</button>
+        }
+      </div>
+    </div>
+  }
+}

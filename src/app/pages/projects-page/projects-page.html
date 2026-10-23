@@ -1,0 +1,28 @@
+<div class="eyebrow mono">Сектор S-27 · галерея</div>
+<h1>Мои <i>проекты</i></h1>
+<div class="holo-list">
+  @for (p of projects; track p.code; let i = $index) {
+    <article class="holo" [style.--c]="p.color || palette[i % palette.length]" [style.--d]="i * 0.12 + 's'"
+             (pointermove)="tilt($event)" (pointerleave)="untilt($event)">
+      <div class="holo-in">
+        <header class="holo-h mono">
+          <span>{{ p.code }}</span>
+          <span class="holo-st"><i></i>{{ p.status }}</span>
+        </header>
+        <h2>{{ p.name }}</h2>
+        <p class="holo-what">{{ p.what }}</p>
+        <p class="holo-why">{{ p.why }}</p>
+        <svg class="holo-wave" viewBox="0 0 200 28" preserveAspectRatio="none" aria-hidden="true">
+          <path [attr.d]="wave(i)" />
+        </svg>
+        <div class="holo-tags mono">@for (s of p.stack; track s) { <span>{{ s }}</span> }</div>
+        @if (p.github || p.demo) {
+          <div class="holo-links mono">
+            @if (p.github) { <a [href]="p.github" target="_blank" rel="noopener">GitHub ↗</a> }
+            @if (p.demo) { <a [href]="p.demo" target="_blank" rel="noopener">Демо ↗</a> }
+          </div>
+        }
+      </div>
+    </article>
+  }
+</div>

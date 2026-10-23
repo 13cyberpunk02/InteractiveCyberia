@@ -1,59 +1,92 @@
-# InteractiveCyberia
+# Нео-Эдем - 3D-сайт на Angular 22
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
+Неоновый киберпанк-мегаполис на Three.js. Маршруты Angular управляют перелётами камеры, страницы показываются в панели. Ещё в городе есть:
 
-## Development server
+- ангар с 6 машинами, на которых можно ездить по улицам или летать;
+- ливень и мокрые улицы с отражениями;
+- кит-баш башни с LED-экранами;
+- голограммы китовых акул и карпов кои;
+- жители, которые ходят по тротуарам;
+- радио «Ноктюрн FM 13.02» с твоими треками и плеером с визуализатором;
+- машины с живой механикой: колёса поворачивают, сопла и вентиляторы отклоняются, задние фары оставляют световой шлейф.
 
-To start a local development server, run:
+## Запуск
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Нужен **Node.js 22.22.3+ или 24.15+** (так требует Angular CLI 22).
 
 ```bash
-ng generate component component-name
+npm install
+npm start          # http://localhost:4200
+npm run build      # готовая сборка в dist/neo-eden/browser
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Как устроен проект
 
-```bash
-ng generate --help
+```
+src/app/
+├─ app.ts / app.html         корневой компонент: холст, HUD, панель с <router-outlet>, горячие клавиши
+├─ app.routes.ts             маршруты; data.loc говорит городу, куда лететь
+├─ pages/pages.ts            содержимое страниц (Центр, Архив, Проекты, Сигнал, Ангар) - меняй тексты здесь
+├─ services/city.service.ts  мост между Angular и движком: сигналы и команды
+├─ ui/                       холст, стартовый экран, верхняя панель, радио (radio.ts), навигация, метки, HUD поездки
+└─ engine/                   3D-движок без Angular
+   ├─ city-engine.ts         типизированный фасад движка - с ним работает CityService
+   ├─ world.ts               весь город: сцена, здания, улицы, дождь, транспорт, люди, рыбы, пост-обработка, вождение
+   ├─ config.ts              точки маршрута, список машин в ангаре, уровни графики
+   └─ audio.ts               звуки (Web Audio): эффекты, гул, дождь, двигатель и радио
+
+public/music/   треки радио (.opus) + playlist.json - его собирает scripts/playlist.mjs
+public/models/
+├─ city/      здания, жители и рыбы-голограммы (.glb, сжатые meshopt) + index.json со списком
+├─ kit/       текстуры облицовки башен и атлас всех экранов (.jpg) + kittex.json
+└─ cars/      6 машин для ангара (.glb)
 ```
 
-## Building
+Главная идея: **холст с городом стоит вне `<router-outlet>`** и создаётся один раз.
+При смене маршрута `App` читает `data.loc` и вызывает `CityService.goTo()`.
+Движок плавно перелетает камерой, а когда долетел, панель показывает страницу.
+Поэтому ссылки, кнопка «назад» и прямые адреса вроде `/projects` работают как на обычном сайте.
 
-To build the project run:
+`world.ts` - это перенос автономного демо почти без изменений, поэтому проверка типов TypeScript
+в нём выключена (`// @ts-nocheck`). Остальное приложение типизировано полностью: всё, что движок
+умеет, описано интерфейсом в `city-engine.ts`.
 
-```bash
-ng build
-```
+## Частые задачи
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+**Музыка для радио.** Положи файлы `.opus` (подойдут и `.ogg`, `.mp3`, `.m4a`) в `public/music`.
+`npm start` и `npm run build` сами пересоберут `playlist.json`; на запущенном сервере выполни `npm run playlist`.
+Название трека берётся из имени файла: `Исполнитель - Название.opus`, номер в начале (`01 `) задаёт порядок.
+Радио стартует со случайного трека по кнопке «Войти»: до первого клика браузеры не дают включать звук.
 
-## Running unit tests
+**Поменять тексты.** `src/app/pages/pages.ts`. Подписи на голопанелях проектов - `buildProjects()` в `engine/world.ts`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+**Добавить новую локацию.**
+1. Добавь запись в `LOCS` в `engine/config.ts` (ключ, путь, координаты объекта и камеры).
+2. Создай компонент страницы в `pages/pages.ts`.
+3. Добавь маршрут в `app.routes.ts` с `data: { loc: 'твой-ключ' }`.
 
-```bash
-ng test
-```
+**Заменить или добавить здание.** Положи `.glb` в `public/models/city/` и впиши его имя:
+- в `index.json`;
+- в `BMETA` (высота корпуса) и в таблицу `KIT` (какие модели куда ставить) в начале раздела зданий в `world.ts`.
 
-## Running end-to-end tests
+Материалы с именами `kit_*`, `facade_*` и `screen_atlas` движок рисует своими шейдерами. Всё остальное освещается автоматически.
 
-For end-to-end (e2e) testing, run:
+**Добавить машину в ангар.** Положи `.glb` в `public/models/cars/`. Затем добавь запись:
+- в `CARS` в `engine/config.ts` - что показывать в ангаре;
+- в `CARS` в `world.ts` - скорость, разгон, поворот, наземная или летающая.
 
-```bash
-ng e2e
-```
+Колёса (`wheel_*`) и винты (`rotor_*`) крутятся сами, если узлы так названы.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+**Графика.** Кнопка «Графика» в верхней панели переключает три уровня: плотность пикселей, отражения, количество капель дождя, конусы света. Сами уровни описаны в `QUALITY` в `world.ts`. Выбор запоминается в браузере.
 
-## Additional Resources
+## Публикация
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Это одностраничное приложение: хостинг должен отдавать `index.html` на любой путь.
+Netlify, Vercel и Firebase Hosting делают это настройкой; для nginx - `try_files $uri /index.html`.
+Папку `models/` стоит отдавать со сжатием (gzip/brotli) и долгим кэшем.
+
+## Производительность
+
+- Здания, машины, люди и капли рисуются через инстансинг. Окна, облицовка, экраны и дождь рисуют шейдеры.
+- При входе загружается около 6 МБ моделей и текстур. Машины подгружаются только при выборе в ангаре.
+- На телефонах по умолчанию включается «Низкая» графика: без отражений, меньше дождя, плотность пикселей 1.

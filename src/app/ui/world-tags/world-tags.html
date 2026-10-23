@@ -1,0 +1,5 @@
+@for (l of locs; track l.key) {
+  <a #tag class="tag3d" [attr.data-key]="l.key" [routerLink]="'/' + l.path" tabindex="-1" (click)="city.click()">
+    <span class="lbl mono">{{ l.name }} · {{ l.code }}</span><span class="stem"></span>
+  </a>
+}

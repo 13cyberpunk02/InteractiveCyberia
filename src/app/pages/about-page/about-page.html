@@ -1,0 +1,11 @@
+<div class="eyebrow mono">Сектор S-14 · архив · досье</div>
+<h1>Салават - <i>собираю</i> системы от базы данных до последнего пикселя</h1>
+<p>Днём - задачи, вечером - свои пет-проекты: от идеи и архитектуры до бэкенда,
+  интерфейса и работающей версии. Пишу бэкенд на C# и .NET, фронтенд на Angular.</p>
+<p class="dim">Этот город - один из таких проектов: Angular, Three.js, шейдеры и немного неона.</p>
+@for (g of skills; track g.title) {
+  <div class="eyebrow mono">{{ g.title }}</div>
+  <div class="tags">@for (s of g.items; track s) { <span>{{ s }}</span> }</div>
+}
+<a class="cta" routerLink="/contact">Связаться →</a> <span></span>
+<a class="cta blog-m" href="https://cyberius.site" target="_blank" rel="noopener">Мой личный блог →</a>

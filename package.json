@@ -1,8 +1,10 @@
 {
   "name": "interactive-cyberia",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
+    "playlist": "node scripts/playlist.mjs",
+    "prestart": "node scripts/playlist.mjs",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -17,13 +19,16 @@
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
+    "gsap": "^3.15.0",
     "rxjs": "~7.8.0",
+    "three": "^0.186.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^22.2.3",
     "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.0",
+    "@types/three": "^0.186.0",
     "jsdom": "^30.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",

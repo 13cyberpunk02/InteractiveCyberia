@@ -1,0 +1,6 @@
+@if (city.started() && !city.driving()) {
+  <div class="hud readout mono">
+    X <em>{{ h().x.toFixed(1) }}</em> Y <em>{{ h().y.toFixed(1) }}</em> Z <em>{{ h().z.toFixed(1) }}</em><br>
+    ВЫСОТА {{ h().y | number:'1.0-0' }} м · {{ status() }}
+  </div>
+}

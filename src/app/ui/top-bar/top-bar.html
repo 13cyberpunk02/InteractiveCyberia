@@ -1,0 +1,9 @@
+<div class="hud top">
+  <div class="brand"><b>CYBERIUS</b><span>город после рассвета</span></div>
+  <div class="audio">
+    <button class="chip" (click)="city.click(); city.cycleQuality()" title="Высокая · Средняя · Низкая">Графика: {{ labels[city.quality()] }}</button>
+    <button class="chip" [attr.aria-pressed]="city.sfxOn()" (click)="city.toggleSfx()">SFX</button>
+    <button class="chip" [attr.aria-pressed]="city.ambOn()" (click)="city.toggleAmbient()">Гул</button>
+  </div>
+</div>
+<div class="hud radio-wrap"><app-radio /></div>
