@@ -63,4 +63,15 @@ export const PROJECTS: Project[] = [
     github: 'https://github.com/13cyberpunk02/FileSignatureChecker',
     demo: 'можно склонировать и самому собрать',
   },
+  {
+    code: 'PRJ-04',
+    name: 'FileSignatureChecker',
+    status: 'готов',
+    color: '#1cccbc',
+    what: 'Этот сайт: 3D-город, где каждая страница — отдельная локация.',
+    why: 'Хотел разобраться в WebGL и сделать портфолио, которое запоминается.',
+    stack: ['Angular', 'TypeScript', 'Three.js', 'GLSL'],
+    github: 'https://github.com/13cyberpunk02/InteractiveCyberia',
+    demo: 'https://cv.cyberius.site',
+  },
 ];
